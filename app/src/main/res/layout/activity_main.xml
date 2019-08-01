@@ -26,7 +26,29 @@
     <Button
         android:id="@+id/btnStartSinging"
         android:layout_margin="10dp"
-        android:text="Sing A Song"
+        android:text="Start / Stop Singing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnStartSpeech"
+        android:layout_margin="10dp"
+        android:text="Start Speech Recognition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <Button
+        android:id="@+id/btnStopSpeech"
+        android:layout_margin="10dp"
+        android:text="Stop Speech Recognition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:id="@+id/tvSpeechResult"
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

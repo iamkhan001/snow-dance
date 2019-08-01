@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.csjbot.cosclient.constant.ClientConstant;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private RobotService.OnEventFailedListener failedListener;
     private Context context;
     private MediaPlayer player;
+    private TextView tvSpeechResult;
+
 
     private ServiceConnection robotConnection = new ServiceConnection() {
         @Override
@@ -125,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         btnStartDance = findViewById(R.id.btnStartDance);
         btnStopDance = findViewById(R.id.btnStopDancing);
         btnSing = findViewById(R.id.btnStartSinging);
-
+        tvSpeechResult = findViewById(R.id.tvSpeechResult);
 
         btnStartDance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,6 +159,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+        findViewById(R.id.btnStartSpeech).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JSONObject object = new JSONObject();
+                try {
+                    object.put("msg_id",Request.SPEECH_START_MULTI_RECOG_REQ);
+                    robotService.sendCommand(object.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        findViewById(R.id.btnStartSpeech).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JSONObject object = new JSONObject();
+                try {
+                    object.put("msg_id",Request.SPEECH_STOP_MULTI_RECOG_REQ);
+                    robotService.sendCommand(object.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         btnSing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,6 +208,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             JSONObject object = new JSONObject(json);
 
+            Log.e(TAG,"Result >> "+json);
+
             int errorCode = 0;
 
             if (object.has("error_code")){
@@ -196,6 +229,23 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case Request.DANCE_STOP_RSP:
                         showMessage("Dance Stop!");
+                        break;
+
+                    case Request.SPEECH_START_MULTI_RECOG_RSP:
+                        showMessage("Speech Start Recognition");
+                        break;
+
+                    case Request.SPEECH_STOP_MULTI_RECOG_RSP:
+                        showMessage("Speech Stop Recognition");
+                        break;
+
+                    case Request.SPEECH_TO_TEXT_NOTIFICATION:
+                        try {
+                            String text = object.getString("text");
+                            tvSpeechResult.setText(text);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                         break;
                 }
 
